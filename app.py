@@ -5,7 +5,7 @@ import tensorflow as tf
 from tensorflow.keras.preprocessing import image
 from PIL import Image
 
-import onnxruntime as ort
+from optimum.onnxruntime import ORTModelForSequenceClassification
 from transformers import AutoTokenizer
 
 st.set_page_config(layout="centered")
@@ -33,8 +33,9 @@ def load_food_model():
 @st.cache_resource
 def load_sentiment_model_and_tokenizer():
     try:
-        tokenizer = AutoTokenizer.from_pretrained('models/indobertweet_sentiment_optimized')
-        ort_session = ort.InferenceSession('models/indobertweet_sentiment_optimized/model_quantized.onnx')
+        tokenizer = AutoTokenizer.from_pretrained('valdeez/indobertweet_sentiment_optimized')
+        model = ORTModelForSequenceClassification.from_pretrained('valdeez/indobertweet_sentiment_optimized')
+        ort_session = model.session
 
         return ort_session, tokenizer
     except Exception as e:
@@ -236,4 +237,5 @@ elif page == "food":
 elif page == "sentiment":
     sentiment_page()
 else:
+
     main_page()
