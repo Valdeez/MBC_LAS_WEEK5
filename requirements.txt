@@ -1,8 +1,8 @@
 streamlit
-transformers
-onnxruntime
-tensorflow
+transformers==4.30.0
+onnxruntime==1.15.1
+tensorflow==2.13.0
 numpy
 Pillow
-optimum[onnxruntime]
-tf-keras
+optimum[onnxruntime]==1.9.0
+tf-keras==2.13.0
