@@ -4,3 +4,4 @@ onnxruntime
 tensorflow
 numpy
 Pillow
+optimum[onnxruntime]
