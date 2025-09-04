@@ -5,7 +5,9 @@ import tensorflow as tf
 from tensorflow.keras.preprocessing import image
 from PIL import Image
 
-from optimum.onnxruntime import ORTModelForSequenceClassification
+import onnxruntime as ort
+from huggingface_hub import hf_hub_download
+# from optimum.onnxruntime import ORTModelForSequenceClassification
 from transformers import AutoTokenizer
 
 st.set_page_config(layout="centered")
@@ -34,8 +36,11 @@ def load_food_model():
 def load_sentiment_model_and_tokenizer():
     try:
         tokenizer = AutoTokenizer.from_pretrained('valdeez/indobertweet_sentiment_optimized')
-        model = ORTModelForSequenceClassification.from_pretrained('valdeez/indobertweet_sentiment_optimized')
-        ort_session = model.session
+        # model = ORTModelForSequenceClassification.from_pretrained('valdeez/indobertweet_sentiment_optimized')
+        # ort_session = model.session
+
+        model_path = hf_hub_download(repo_id='valdeez/indobertweet_sentiment_optimized', filename='model_quantized.onnx')
+        ort_session = ort.InferenceSession(model_path)
 
         return ort_session, tokenizer
     except Exception as e:
@@ -239,3 +244,4 @@ elif page == "sentiment":
 else:
 
     main_page()
+
