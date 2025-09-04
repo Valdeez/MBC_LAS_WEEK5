@@ -7,7 +7,6 @@ from PIL import Image
 
 import onnxruntime as ort
 from huggingface_hub import hf_hub_download
-# from optimum.onnxruntime import ORTModelForSequenceClassification
 from transformers import AutoTokenizer
 
 st.set_page_config(layout="centered")
@@ -36,9 +35,6 @@ def load_food_model():
 def load_sentiment_model_and_tokenizer():
     try:
         tokenizer = AutoTokenizer.from_pretrained('valdeez/indobertweet_sentiment_optimized')
-        # model = ORTModelForSequenceClassification.from_pretrained('valdeez/indobertweet_sentiment_optimized')
-        # ort_session = model.session
-
         model_path = hf_hub_download(repo_id='valdeez/indobertweet_sentiment_optimized', filename='model_quantized.onnx')
         ort_session = ort.InferenceSession(model_path)
 
@@ -124,17 +120,14 @@ def predict_sentiment(text):
     ort_outputs = ORT_SESSION.run(None, ort_inputs)
     logits = ort_outputs[0]
 
-    # --- Softmax menggunakan NumPy ---
-    # Kurangi nilai terbesar untuk stabilitas numerik
+    # Perhitungan softmax dengan numpy
     exp_logits = np.exp(logits - np.max(logits, axis=1, keepdims=True))
     probabilities = exp_logits / np.sum(exp_logits, axis=1, keepdims=True)
     
     # Dapatkan indeks kelas dengan probabilitas tertinggi
     predicted_class_id = np.argmax(probabilities, axis=1)[0]
     
-    # Dapatkan confidence score
     confidence_score = probabilities[0, predicted_class_id]
-
     predicted_label = SENTIMENT_CLASS[predicted_class_id]
     
     return predicted_label, confidence_score
@@ -154,14 +147,14 @@ def main_page():
             st.rerun()
 
     with col2:
-        st.image("images/pizza.png", use_container_width=True)
+        st.image("images/foods.png", use_container_width=True)
         st.subheader("Food 101 Image Classification")
         if st.button("Coba Model 101 Makanan", key="btn_food"):
             st.query_params["page"] = "food"
             st.rerun()
 
     with col3:
-        st.image("images/spell-check.png", use_container_width=True)
+        st.image("images/emotions.png", use_container_width=True)
         st.subheader("Twitter Sentiment Classification")
         if st.button("Coba Model Sentimen Teks", key="btn_sentiment"):
             st.query_params["page"] = "sentiment"
@@ -170,7 +163,7 @@ def main_page():
     st.write("---")
     st.write("by Muhammad Daffa Izzati")
 
-# --- Fungsi Halaman Model (Sama seperti sebelumnya) ---
+# --- Fungsi Halaman Model ---
 def dogcat_page():
     st.title("Klasifikasi Anjing vs Kucing")
     st.write("Unggah gambar anjing atau kucing, dan model akan memprediksinya!")
@@ -244,4 +237,5 @@ elif page == "sentiment":
 else:
 
     main_page()
+
 
