@@ -138,7 +138,8 @@ def predict_sentiment(text):
 
 # --- Fungsi Halaman Utama ---
 def main_page():
-    st.title("Hi, Selamat Datang!")
+    st.title("👋Hi, Selamat Datang!")
+    st.markdown("Model yang ada di aplikasi ini merupakan model hasil Learning Advance Skill pada Week 3 & 4.")
     st.info("Silahkan pilih model yang ingin kamu coba")
 
     col1, col2, col3 = st.columns(3)
@@ -264,6 +265,7 @@ elif page == "sentiment":
 else:
 
     main_page()
+
 
 
 
