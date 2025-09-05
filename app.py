@@ -9,7 +9,11 @@ import onnxruntime as ort
 from huggingface_hub import hf_hub_download
 from transformers import AutoTokenizer
 
-st.set_page_config(layout="centered")
+st.set_page_config(
+    layout="centered",
+    page_title="TUGAS LAS WEEK 5",
+    page_icon="📖"
+)
 
 # --- Muat Model dan Definisikan Kelas ---
 @st.cache_resource
@@ -155,7 +159,7 @@ def main_page():
 
     with col3:
         st.image("images/emotions.png", use_container_width=True)
-        st.subheader("Twitter Sentiment Classification")
+        st.subheader("Text Sentiment Classification")
         if st.button("Coba Model Sentimen Teks", key="btn_sentiment"):
             st.query_params["page"] = "sentiment"
             st.rerun()
@@ -165,7 +169,14 @@ def main_page():
 
 # --- Fungsi Halaman Model ---
 def dogcat_page():
-    st.title("Klasifikasi Anjing vs Kucing")
+    st.title("🐾Klasifikasi Anjing vs Kucing")
+    st.markdown("Aplikasi ini menggunakan model deep learning untuk mengklasifikasikan gambar anjing dan kucing.")
+
+    with st.expander("Tentang Model & Dataset"):
+        st.markdown("""
+        Model ini dikembangkan menggunakan arsitektur **InceptionV3**, sebuah model Convolutional Neural Network (CNN) yang sangat efisien dan telah dilatih sebelumnya pada dataset ImageNet.
+        Model dilatih dan di-fine-tune menggunakan dataset **Kaggle Dogs vs. Cats**, yang berisi lebih dari 25.000 gambar.
+        """)
     st.write("Unggah gambar anjing atau kucing, dan model akan memprediksinya!")
 
     uploaded_file = st.file_uploader("Pilih sebuah gambar...", type=["jpg", "jpeg", "png"])
@@ -186,7 +197,15 @@ def dogcat_page():
         st.rerun()
 
 def food_page():
-    st.title("Klasifikasi Makanan (Food 101)")
+    st.title("🍽️Klasifikasi 101 Makanan")
+    st.markdown("Aplikasi ini menggunakan model deep learning untuk mengidentifikasi jenis makanan.")
+
+    with st.expander("Tentang Model & Dataset"):
+        st.markdown("""
+        Model ini dikembangkan menggunakan arsitektur **MobileNetV2**, sebuah model Convolutional Neural Network (CNN) yang efisien dan cocok untuk aplikasi *web* dan *mobile*. Model ini dilatih menggunakan teknik **transfer learning** pada dataset **Food 101**.
+
+        Dataset **Food 101** berisi 101 kategori makanan yang berbeda, dengan total 101.000 gambar. Model MobileNetV2 yang sudah terlatih pada ImageNet diadaptasi dan di-fine-tune dengan dataset Food 101 untuk dapat mengenali berbagai jenis makanan dengan akurat.
+        """)
     st.write("Unggah gambar makanan, dan model akan memprediksi nama makanannya!")
 
     uploaded_file = st.file_uploader("Pilih sebuah gambar...", type=["jpg", "jpeg", "png"])
@@ -206,8 +225,16 @@ def food_page():
         st.rerun()
 
 def sentiment_page():
-    st.title("Klasifikasi Sentimen Twitter")
-    st.write("Masukkan teks, dan model akan memprediksi sentimennya (Sadness/Anger/Hope/Support/Disappointment)!")
+    st.title("💬Klasifikasi Sentimen Teks")
+    st.markdown("Aplikasi ini memprediksi sentimen dari teks dengan menggunakan model berbasis Transformers.")
+
+    with st.expander("Tentang Model & Dataset"):
+        st.markdown("""
+        Model ini menggunakan arsitektur **IndoBertweet**, sebuah model *deep learning* yang dikembangkan khusus untuk bahasa Indonesia dan telah dilatih pada data dari Twitter. Model ini sangat efektif dalam memahami konteks dan nuansa bahasa gaul serta singkatan yang sering digunakan di media sosial.
+
+        Model dilatih pada dataset komentar terkait kasus Tom Lembong. Dataset ini memungkinkan model untuk secara spesifik mengidentifikasi sentimen seperti **Sadness, Anger, Hope, Support, dan Disappointment** dari konteks komentar yang relevan.
+        """)
+    st.write("Masukkan teks, dan model akan memprediksi sentimennya!")
 
     user_text = st.text_area("Masukkan teks di sini:", height=150)
     if st.button("Prediksi Sentimen"):
@@ -237,5 +264,6 @@ elif page == "sentiment":
 else:
 
     main_page()
+
 
 
